@@ -5,11 +5,14 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-
+    private Animator _anim;
+    private Vector3 _target;
     private NavMeshAgent _agent;
+    float _distance;
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _anim = GetComponentInChildren<Animator>();
     }
 
 
@@ -22,9 +25,18 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(rayOrigin, out hitInfo))
             {
-                //moving our player to the point where we are cli   cking
+                //moving our player to the point where we are clicking
                 _agent.SetDestination(hitInfo.point);
+                _anim.SetBool("isWalking", true);
+
             }
+
+        }
+        if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+        {
+            _anim.SetBool("isWalking", false);
+
         }
     }
 }
+
