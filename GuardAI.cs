@@ -6,8 +6,9 @@ using UnityEngine.AI;
 public class GuardAI : MonoBehaviour
 {
     public List<Transform> wayPoints;
-    private int _currentTarget;
+    [SerializeField] private int _currentTarget;
     private NavMeshAgent _agent;
+    private bool _reverse;
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -17,7 +18,31 @@ public class GuardAI : MonoBehaviour
     {
         if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null)
         {
-            _agent.SetDestination(wavePoints[_currentTarget]);
+            _agent.SetDestination(wayPoints[_currentTarget].position);
+
+            float distance = Vector3.Distance(transfor.position, wayPoints[_currentTarget].position);
+            if (distance < 1.0f)
+            {
+                if (_reverse == true)
+                {
+                    _currentTarget--;
+                    if (_currentTarget == 0)
+                    {
+                        _reverse = false;
+                        _currentTarget = 0;
+                    }
+                }
+                else
+                {
+                    _currentTarget++;
+                    if (_currentTarget = wayPoints.Count)
+                    {
+                        _reverse = true;
+                        _currentTarget--;
+                    }
+                }
+
+            }
         }
     }
 }
