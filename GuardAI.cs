@@ -20,8 +20,7 @@ public class GuardAI : MonoBehaviour
         {
             _agent.SetDestination(wayPoints[_currentTarget].position);
 
-            float distance = Vector3.Distance(transfor.position, wayPoints[_currentTarget].position);
-            if (distance < 1.0f)
+            if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
             {
                 if (_reverse == true)
                 {
@@ -35,7 +34,7 @@ public class GuardAI : MonoBehaviour
                 else
                 {
                     _currentTarget++;
-                    if (_currentTarget = wayPoints.Count)
+                    if (_currentTarget == wayPoints.Count)
                     {
                         _reverse = true;
                         _currentTarget--;
