@@ -44,18 +44,18 @@ public class GuardAI : MonoBehaviour
             }
         }
 
-        //     else if (_reverse == false)
-        //     {
-        //         _currentTarget++;
+        else if (_reverse == false)
+        {
+            _currentTarget++;
 
-        //         if (_currentTarget == wayPoints.Count)
-        //         {
-        //             _reverse = true;
-        //             _currentTarget--;
-        //         }
-        //     }
-        //     _targetReached = false;
-        // }
+            if (_currentTarget == wayPoints.Count)
+            {
+                _reverse = true;
+                _currentTarget--;
+            }
+        }
+        _targetReached = false;
     }
+}
 
 
