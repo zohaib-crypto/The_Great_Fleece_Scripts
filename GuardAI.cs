@@ -17,21 +17,41 @@ public class GuardAI : MonoBehaviour
     }
     void Update()
     {
-        if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null)
+        if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null) //checking if there are wayPoints and also with that index there exits a wayPoint
         {
             _agent.SetDestination(wayPoints[_currentTarget].position);
 
             if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance && _targetReached == false)
             {
-                _targetReached = true;
 
-                StartCoroutine(WaitBeforeMoving());
+                if (_currentTarget == 0 | _currentTarget == wayPoints.Count - 1)
+                {
+                    _targetReached = true;
+                    StartCoroutine(WaitBeforeMoving());
+                }
+                else if (_reverse == true)
+                {
+                    _currentTarget--;
+                    _reverse = false;
+                }
+                else
+                {
+                    _currentTarget++;
+                }
             }
         }
     }
     IEnumerator WaitBeforeMoving()
     {
-        yield return new WaitForSeconds(2.0f);
+        if (_currentTarget == 0)
+        {
+            yield return new WaitForSeconds(2.0f);
+        }
+        else if (_currentTarget == wayPoints.Count - 1)
+        {
+            yield return new WaitForSeconds(2.0f);
+        }
+
 
         if (_reverse == true)
         {
