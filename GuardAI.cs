@@ -11,6 +11,8 @@ public class GuardAI : MonoBehaviour
     private bool _reverse;
     private bool _targetReached;
     private Animator _anim;
+    public bool coinTossed;
+    public Vector3 coinPos;
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -19,7 +21,7 @@ public class GuardAI : MonoBehaviour
     }
     void Update()
     {
-        if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null) //checking if there are wayPoints and also with that index there exits a wayPoint
+        if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null && !coinTossed) //checking if there are wayPoints and also with that index there exits a wayPoint
         {
             _agent.SetDestination(wayPoints[_currentTarget].position);
             float distance = Vector3.Distance(transform.position, wayPoints[_currentTarget].position);
@@ -64,6 +66,14 @@ public class GuardAI : MonoBehaviour
                         _currentTarget++;
                     }
                 }
+            }
+        }
+        else
+        {
+            float distance = Vector3.Distance(transform.position, coinPos);
+            if (distance < 2)
+            {
+                _anim.SetBool("Walk", false);
             }
         }
     }
