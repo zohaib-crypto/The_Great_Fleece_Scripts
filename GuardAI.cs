@@ -10,9 +10,11 @@ public class GuardAI : MonoBehaviour
     private NavMeshAgent _agent;
     private bool _reverse;
     private bool _targetReached;
+    private Animator _anim;
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _anim = GetComponent<Animator>();
 
     }
     void Update()
@@ -20,23 +22,47 @@ public class GuardAI : MonoBehaviour
         if (wayPoints.Count != 0 && wayPoints[_currentTarget] != null) //checking if there are wayPoints and also with that index there exits a wayPoint
         {
             _agent.SetDestination(wayPoints[_currentTarget].position);
+            float distance = Vector3.Distance(transform.position, wayPoints[_currentTarget].position);
+            if (distance < 1 && (_currentTarget == 0 || _currentTarget == wayPoints.Count - 1))
+            {
+
+                if (_anim != null)
+                {
+                    _anim.SetBool("Walk", false);
+                }
+
+            }
+            else
+            {
+                if (_anim != null)
+                {
+                    _anim.SetBool("Walk", true);
+                }
+            }
+            if (wayPoints.Count < 2)
+            {
+                return;
+            }
 
             if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance && _targetReached == false)
             {
 
-                if (_currentTarget == 0 | _currentTarget == wayPoints.Count - 1)
+                if (_currentTarget == 0 || _currentTarget == wayPoints.Count - 1) // if we are at start or end
                 {
                     _targetReached = true;
                     StartCoroutine(WaitBeforeMoving());
                 }
-                else if (_reverse == true)
+                else //else if we are somewhere in between  
                 {
-                    _currentTarget--;
-                    _reverse = false;
-                }
-                else
-                {
-                    _currentTarget++;
+                    if (_reverse == true)
+                    {
+                        _currentTarget--;
+                        _reverse = false;
+                    }
+                    else
+                    {
+                        _currentTarget++;
+                    }
                 }
             }
         }
@@ -46,10 +72,12 @@ public class GuardAI : MonoBehaviour
         if (_currentTarget == 0)
         {
             yield return new WaitForSeconds(2.0f);
+
         }
         else if (_currentTarget == wayPoints.Count - 1)
         {
             yield return new WaitForSeconds(2.0f);
+
         }
 
 
